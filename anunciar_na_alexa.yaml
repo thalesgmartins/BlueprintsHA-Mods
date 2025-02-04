@@ -3,10 +3,21 @@
 # ================================
 blueprint:
   name: Anunciar via Alexa Improved
-  description: Anuncia em todas as caixas Echo selecionadas
   domain: script
-mode: queued
+  author: Thales Martins
+  description: >
+    # Blueprint Anunciar via Alexa - Improved
 
+    Esse Blueprint é baseado em [anunciar_na_alexa.yaml](https://github.com/lnpbr/BlueprintsHA/blob/main/anunciar_na_alexa.yaml), disponibilizado pelo [LNPBR](https://github.com/lnpbr). 
+
+    O blueprint apresenta novas funcionalidades, permitindo não apenas anunciar na alexa, mas também dando a opção de selecionar o som de notificação, assim como desabilita-lo.
+
+    ## Setup
+
+    Antes de qualquer outra coisa, é necessário ter feito a instalação do [Alexa Media Player](https://github.com/custom-components/alexa_media_player) (Disponível através do HACS)
+
+    **Não tem nenhuma configuração aparecendo nessa tela!!**; você vai precisar primeiro criar um script para esse blueprint! Depois, pode usar ele acessando a sua entidade, o menu "Action" ou até mesmo pelo Node-Red.
+mode: queued
 # Ícone para identificação
 icon: mdi:bullhorn
 
