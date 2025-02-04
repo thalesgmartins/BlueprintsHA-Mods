@@ -1,15 +1,28 @@
+# ================================
+# Configurações do Blueprint
+# ================================
 blueprint:
   name: Anunciar via Alexa
   description: Anuncia em todas as caixas Echo selecionadas
   domain: script
 mode: queued
+
+# Ícone para identificação
+icon: mdi:bullhorn
+
+# ================================
+# Parametros do usuario
+# ================================
 fields:
+  # A mensagem que vai ser enviada
   mensagem:
     selector:
       text: null
     name: Mensagem
     description: O que anunciar?
     required: true
+
+  # Em quais entidades Echo deve anunciar
   onde_anunciar:
     selector:
       entity:
@@ -21,6 +34,8 @@ fields:
     required: true
     default: []
     description: Escolha as Alexas
+
+  # Volume que a mensagem será transmitida
   volume:
     selector:
       number:
@@ -30,34 +45,94 @@ fields:
     default: 0.5
     required: true
     name: Volume
-    description: Escolha o volume do anúncio (padrão 90%)
+    description: Escolha o volume do anúncio (padrão 50%)
+
+  # Tipo de notificação (Com ou sem som antes da mensagem)
+  tipo_notificacao:
+    selector:
+      select:
+        options:
+          - label: "Anúncio com som"
+            value: "announce"
+          - label: "Texto para fala (sem som)"
+            value: "tts"
+        multiple: false
+    default: "tts"
+    required: true
+    name: Tipo de Notificação
+    description: Escolha se deseja que a Alexa anuncie com um som antes ou apenas leia a mensagem diretamente.
+
+  # Escolher o som quando o modo for "announce"
+  som_alerta:
+    selector:
+      select:
+        options:
+          - label: "Campainha"
+            value: "amzn_sfx_doorbell_chime_01"
+          - label: "Sirene curta"
+            value: "amzn_sfx_air_raid_siren_01"
+          - label: "Bipe eletrônico"
+            value: "amzn_sfx_electronic_beep_01"
+          - label: "Alarme de incêndio"
+            value: "amzn_sfx_fire_alarm_01"
+          - label: "Zumbido"
+            value: "amzn_sfx_buzz_01"
+        multiple: false
+    default: "amzn_sfx_doorbell_chime_01"
+    required: false
+    name: Som de Alerta
+    description: Escolha o som que será tocado antes da mensagem quando o modo for "Anúncio com som".
+
+# ================================
+# Sequencia de Acoes
+# ================================
 sequence:
+  # Ajusta o volume para o valor escolhido
   - service: media_player.volume_set
     metadata: {}
     data:
       volume_level: "{{ volume }}"
     target:
       entity_id: "{{ onde_anunciar }}"
+
+  # Pequeno delay para garantir que o volume foi ajustado
   - delay:
-      hours: 0
-      minutes: 0
       seconds: 1
-      milliseconds: 0
+
+  # Se o tipo for "announce", toca o som de alerta antes da mensagem
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ tipo_notificacao == 'announce' }}"
+        sequence:
+          - service: media_player.play_media
+            data:
+              media_content_type: sound
+              media_content_id: "{{ som_alerta }}"
+            target:
+              entity_id: "{{ onde_anunciar }}"
+          - delay:
+              seconds: 2 # Pequeno atraso para garantir que o som seja reproduzido
+
+  # Envia a mensagem para as alexas selecionadas
   - service: notify.alexa_media
     data:
       message: "{{ mensagem }}"
       data:
-        type: announce
+        type: tts
       target: "{{ onde_anunciar }}"
+
+  # Aguarda 10 segundos para restaurar o volume
   - delay:
       hours: 0
       minutes: 0
       seconds: 10
       milliseconds: 0
+
+  # Reduz o volume para 30% depois de anunciar
   - service: media_player.volume_set
     metadata: {}
     data:
       volume_level: 0.3
     target:
       entity_id: "{{ onde_anunciar }}"
-icon: mdi:bullhorn
