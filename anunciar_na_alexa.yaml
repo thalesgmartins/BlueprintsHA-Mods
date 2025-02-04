@@ -78,16 +78,16 @@ fields:
     selector:
       select:
         options:
+          - label: "Sinos"
+            value: "bell_02"
           - label: "Campainha"
             value: "amzn_sfx_doorbell_chime_01"
-          - label: "Sirene curta"
-            value: "amzn_sfx_air_raid_siren_01"
-          - label: "Bipe eletrônico"
-            value: "amzn_sfx_electronic_beep_01"
-          - label: "Alarme de incêndio"
-            value: "amzn_sfx_fire_alarm_01"
-          - label: "Zumbido"
-            value: "amzn_sfx_buzz_01"
+          - label: "Campaínha 2"
+            value: "amzn_sfx_doorbell_chime_02"
+          - label: "Beeps Alerta"
+            value: "buzzers_pistols_01"
+          - label: "Sino de Igreja"
+            value: "amzn_sfx_church_bell_1x_02"
         multiple: false
     default: "amzn_sfx_doorbell_chime_01"
     required: false
