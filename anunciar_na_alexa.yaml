@@ -2,7 +2,7 @@
 # Configurações do Blueprint
 # ================================
 blueprint:
-  name: Anunciar via Alexa
+  name: Anunciar via Alexa Improved
   description: Anuncia em todas as caixas Echo selecionadas
   domain: script
 mode: queued
